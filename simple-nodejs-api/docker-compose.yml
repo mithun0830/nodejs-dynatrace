@@ -6,4 +6,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - DT_CUSTOM_PROP=simple-nodejs-api
+    volumes:
+      - /var/log/nodejs:/var/log/nodejs
     restart: unless-stopped

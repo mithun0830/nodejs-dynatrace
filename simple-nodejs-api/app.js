@@ -1,6 +1,37 @@
 const express = require('express');
+const winston = require('winston');
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Configure Winston logger
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    defaultMeta: { service: 'simple-nodejs-api' },
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: '/var/log/nodejs/api.log' })
+    ]
+});
+
+// Request logging middleware
+app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        logger.info('API Request', {
+            method: req.method,
+            path: req.path,
+            statusCode: res.statusCode,
+            duration: `${duration}ms`,
+            userAgent: req.get('user-agent') || 'unknown'
+        });
+    });
+    next();
+});
 
 // Middleware for parsing JSON bodies
 app.use(express.json());
@@ -40,11 +71,16 @@ app.post('/api/items', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-    console.error(err.stack);
+    logger.error('Error occurred', {
+        error: err.message,
+        stack: err.stack,
+        path: req.path,
+        method: req.method
+    });
     res.status(500).json({ error: 'Something went wrong!' });
 });
 
 // Start the server
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    logger.info(`Server is running on port ${port}`);
 });
