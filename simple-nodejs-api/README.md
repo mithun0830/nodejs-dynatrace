@@ -108,6 +108,15 @@ If you don't see logs in Dynatrace:
 3. Use .gitignore to exclude files that may contain sensitive information.
 4. For production deployments, use secure secret management solutions provided by your cloud platform.
 5. Regularly rotate your API tokens and update your environment variables accordingly.
+6. Copy the .env.example file to .env and replace the placeholders with your actual Dynatrace credentials:
+   ```
+   cp .env.example .env
+   ```
+   Then edit the .env file with your actual values.
+7. Ensure that .env is listed in .gitignore to prevent accidental commits of sensitive information.
+8. If you suspect that secrets have been exposed, immediately rotate your credentials and update your environment variables.
+
+IMPORTANT: The .env file should never be committed to version control. It is already listed in .gitignore.
 
 ## API Endpoints
 
