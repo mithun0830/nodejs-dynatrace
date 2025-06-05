@@ -23,27 +23,72 @@ This project is a simple Node.js API containerized with Docker and monitored usi
 
 1. Log in to your Dynatrace SaaS account.
 2. Ensure that the OneAgent is installed on your Google Cloud VM.
-3. In the Dynatrace web UI, go to "Settings" > "Log Monitoring" and enable it if not already done.
-4. Set up a new log source:
-   - Go to "Settings" > "Log Monitoring" > "Log sources and storage"
-   - Click "Add log source"
-   - Choose "File-based log source"
-   - Set the log source name (e.g., "Simple Node.js API")
-   - Set the log directory path to `/var/log/nodejs`
-   - Set the log file pattern to `*.log`
-   - Configure any additional settings as needed
+3. Get your Dynatrace environment information:
+   - Get your environment ID (tenant) from your Dynatrace URL
+   - Generate an API token with the following permissions:
+     * metrics.ingest
+     * metrics.read
+     * logs.ingest
+     * logs.read
 
-## Viewing API Logs in Dynatrace
+4. Create a `.env` file in the project root with your Dynatrace credentials:
+   ```
+   DT_TENANT=your-environment-id.live.dynatrace.com
+   DT_API_TOKEN=your-api-token
+   ```
 
-1. In the Dynatrace web UI, go to "Logs" in the navigation menu.
-2. Use the following query to filter logs from your API:
+5. Enable Log Monitoring:
+   - Go to "Settings" > "Log Monitoring" and enable it
+   - Set up a new log source:
+     * Go to "Settings" > "Log Monitoring" > "Log sources and storage"
+     * Click "Add log source"
+     * Choose "File-based log source"
+     * Set the log source name (e.g., "Simple Node.js API")
+     * Set the log directory path to `/var/log/nodejs`
+     * Set the log file pattern to `*.log`
+
+6. Deploy the application:
+   ```bash
+   docker-compose up -d --build
    ```
-   service:simple-nodejs-api
-   ```
-3. You can further refine your search using additional filters or by searching for specific log content.
-4. To view detailed information about API requests:
-   - Look for log entries with the message "API Request"
-   - These entries contain information such as method, path, status code, and duration
+
+## Viewing API Metrics and Logs in Dynatrace
+
+1. View Service Metrics:
+   - Go to "Applications & Microservices" > "Services"
+   - Find and click on "simple-nodejs-api"
+   - View default metrics like response time, throughput, and failure rate
+
+2. View Custom Metrics:
+   - Go to "Metrics" in the navigation menu
+   - Search for custom metrics with prefix "custom.simple-nodejs-api"
+   - Available custom metrics include:
+     * itemCount: Number of items in the API
+     * apiCallDuration: Duration of API calls by endpoint
+     * error metrics for failed requests
+
+3. Create a Custom Dashboard:
+   - Go to "Dashboards" > "Create dashboard"
+   - Add tiles for:
+     * Service response time
+     * Request count by endpoint
+     * Custom metrics (itemCount, apiCallDuration)
+     * Error rates and types
+
+4. View API Logs:
+   - Go to "Logs" in the navigation menu
+   - Use query: `service:simple-nodejs-api`
+   - Filter options:
+     * By endpoint: `path:/api/items`
+     * By status: `statusCode:200`
+     * By request type: `message:"API Request"`
+
+5. Set up Alerts:
+   - Go to "Settings" > "Anomaly detection" > "Custom metrics"
+   - Create alerts for:
+     * High response times
+     * Error rate increases
+     * Unusual item count changes
 
 ## Troubleshooting
 

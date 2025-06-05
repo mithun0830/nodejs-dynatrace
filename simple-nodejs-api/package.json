@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "winston": "^3.8.2"
+    "winston": "^3.8.2",
+    "@dynatrace/oneagent-sdk": "^1.5.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

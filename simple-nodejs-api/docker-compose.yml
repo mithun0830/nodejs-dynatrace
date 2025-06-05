@@ -7,6 +7,10 @@ services:
     environment:
       - NODE_ENV=production
       - DT_CUSTOM_PROP=simple-nodejs-api
+      - DT_TENANT=${DT_TENANT}
+      - DT_API_TOKEN=${DT_API_TOKEN}
+      - DT_METRICS_INGEST_URL=https://${DT_TENANT}/api/v2/metrics/ingest
+      - DT_NODE_ID=simple-nodejs-api-${HOSTNAME}
     volumes:
       - /var/log/nodejs:/var/log/nodejs
     restart: unless-stopped
