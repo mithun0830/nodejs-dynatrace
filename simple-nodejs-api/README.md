@@ -36,6 +36,9 @@ This project is a simple Node.js API containerized with Docker and monitored usi
    DT_TENANT=your-environment-id.live.dynatrace.com
    DT_API_TOKEN=your-api-token
    ```
+   Note: Never commit this file to version control. It's already included in .gitignore.
+
+5. For local development, you can create a `.env.local` file with your development credentials. This file is also ignored by git.
 
 5. Enable Log Monitoring:
    - Go to "Settings" > "Log Monitoring" and enable it
@@ -97,6 +100,14 @@ If you don't see logs in Dynatrace:
 2. Check that the log file is being created at `/var/log/nodejs/api.log`.
 3. Verify that the Dynatrace log source is correctly configured.
 4. Review the Dynatrace documentation for any additional steps specific to your environment.
+
+## Security Notes
+
+1. Always use environment variables for sensitive information like API keys and tokens.
+2. Never commit .env files or any files containing secrets to version control.
+3. Use .gitignore to exclude files that may contain sensitive information.
+4. For production deployments, use secure secret management solutions provided by your cloud platform.
+5. Regularly rotate your API tokens and update your environment variables accordingly.
 
 ## API Endpoints
 
